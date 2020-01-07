@@ -21,7 +21,7 @@
 ## 警告
 
 安装后，注册表内 HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\NlaSvc\Parameters\Internet 中 EnableActiveProbing 的值会被修改为 0。这一改变将使 Windows 不再自动检查是否成功连接网络。对于 Windows 8 和 Windows 10 系统，这意味着浏览器在连接校园网后不会自启动并出现校园网登录界面。
-若要恢复，把EnableActiveProbing 的值修改为 1 即可。
+若要恢复，把 EnableActiveProbing 的值修改为 1 即可。
 
 ## 鸣谢
 
