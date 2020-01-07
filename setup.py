@@ -1,6 +1,6 @@
-'''
-Author: GasinAn
-'''
+# Author: GasinAn
+
+
 import os
 import sys
 
@@ -10,27 +10,31 @@ if os.system('conda install requests beautifulsoup4') is 0:
     pass
 elif os.system('pip install requests beautifulsoup4') is 0:
     pass
-elif os.system('pip3 install requests beautifulsoup4') is 0:
-    pass
 else:
-    raise OSError('FAILED!')
+    raise OSError
 
 print('Installing Js2Py...')
-if os.system('pip install requests beautifulsoup4') is 0:
-    pass
-elif os.system('pip3 install requests beautifulsoup4') is 0:
+if os.system('pip install js2py') is 0:
     pass
 else:
-    raise OSError('FAILED!')
+    raise OSError
 
 print('Setting up...')
-easy_bnu_connector_path = sys.path[5]+'\\easy_bnu_connector'
-with open('easy_bnu_connector\\Easy-BNU-Connector.cmd', 'w') as f:
+for path in sys.path:
+    if path[-13:] == 'site-packages':
+        easy_bnu_connector_path = path+'\\easy_bnu_connector'
+        break
+with open('easy_bnu_connector\\Easy-BNU-Connector.bat', 'w') as f:
     f.write('python '+easy_bnu_connector_path+'\\login.py\t\nexit')
 os.system('mkdir '+easy_bnu_connector_path)
-os.system('move /y easy_bnu_connector\\* '+easy_bnu_connector_path)
-os.system('rmdir easy_bnu_connector')
-with open('Easy-BNU-Connector.cmd', 'w') as f:
-    f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.cmd')
-os.system('del setup.cmd')
-os.system('del setup.py')
+os.system('copy /y easy_bnu_connector\\* '+easy_bnu_connector_path)
+
+with open('..\\Easy-BNU-Connector.bat', 'w') as f:
+    f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.bat')
+
+with open('setup.reg', 'w') as f:
+    f.write('Windows Registry Editor Version 5.00\t\n\t\n')
+    f.wrtie('[HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Services')
+    f.write('\\NlaSvc\\Parameters\\Internet]\t\n')
+    f.wrtie('"EnableActiveProbing"=dword:00000000')
+os.system('regedit /s '+sys.path[0]+'\\setup.reg')
