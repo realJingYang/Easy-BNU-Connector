@@ -12,7 +12,9 @@
 
 3. 双击 Easy-BNU-Connector-0.2.0 文件夹内的 setup.bat，
 
-此后会运行 CMD 并出现窗口。若窗口关闭后，Easy-BNU-Connector-0.2.0.zip 和 Easy-BNU-Connector-0.2.0 文件夹消失，并出现 Easy-BNU-Connector.bat，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
+此后会开始安装并出现窗口。安装过程中，若窗口中出现 “Proceed (\[y]/n)?” 字样，需要按回车键以确认安装。
+
+无论是否安装成功，窗口最终都会关闭。若窗口关闭后，Easy-BNU-Connector-0.2.0.zip 和 Easy-BNU-Connector-0.2.0 文件夹消失，并出现 Easy-BNU-Connector.bat，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
 
 以后双击 Easy-BNU-Connector.bat 即可使用。
 
