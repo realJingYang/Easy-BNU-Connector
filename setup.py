@@ -88,5 +88,5 @@ with open('setup.reg') as f:
 change_regedit('Windows Registry Editor Version 5.00', reg)
 change_regedit('REGISTRY4', reg)
 
-with open('..\\Easy-BNU-Connector.bat', 'w') as f:
+with open('Easy-BNU-Connector.bat', 'w') as f:
     f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.bat')
