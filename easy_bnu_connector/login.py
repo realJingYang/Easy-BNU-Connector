@@ -1,5 +1,5 @@
 ﻿# -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.0
+# Easy-BNU-Connector v0.2.1
 # Author: GasinAn
 # License: GNU General Public License v3.0
 
@@ -249,7 +249,7 @@ gui = tkinter.Tk()
 
 # Widgets which appear in both of two interfaces.
 l_symbol = tkinter.Label(gui, text='ต⦕⦁.⦁⦖ต', font=('Times New Roman', 20))
-l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.0')
+l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.1')
 text_message = tkinter.StringVar()
 l_message = tkinter.Label(gui, textvariable=text_message)
 b_setting = tkinter.Button(gui, text='设置', relief='groove')
