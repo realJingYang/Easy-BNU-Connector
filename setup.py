@@ -54,6 +54,9 @@ for path in sys.path:
         easy_bnu_connector_path = path+'\\easy_bnu_connector'
         break
 
+with open('..\\Easy-BNU-Connector.bat', 'w') as f:
+    f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.bat')
+
 trans('easy_bnu_connector\\methods.js', 'easy_bnu_connector\\methods.py')
 with open('easy_bnu_connector\\Easy-BNU-Connector.bat', 'w') as f:
     try:
@@ -87,6 +90,3 @@ with open('setup.reg') as f:
     reg = f.read().replace('\n', '\t\n')
 change_regedit('Windows Registry Editor Version 5.00', reg)
 change_regedit('REGISTRY4', reg)
-
-with open('Easy-BNU-Connector.bat', 'w') as f:
-    f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.bat')
