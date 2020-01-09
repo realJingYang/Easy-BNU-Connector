@@ -89,4 +89,4 @@ def change_regedit(header, reg):
 with open('setup.reg') as f:
     reg = f.read().replace('\n', '\t\n')
 change_regedit('Windows Registry Editor Version 5.00', reg)
-change_regedit('REGISTRY4', reg)
+change_regedit('REGEDIT4', reg)
