@@ -1,9 +1,10 @@
 # Author: GasinAn
 
 import sys
-assert (sys.platform in {'win32', 'cygwin'})
+assert sys.getwindowsversion().major >= 5
 
 import os
+import re
 import time
 try:
     import _thread
@@ -27,43 +28,51 @@ except:
     from requests import request
 
 try:
-    from bs4 import BeautifulSoup
-except:
-    print('Installing Beautifulsoup4...')
-    if os.system('conda install beautifulsoup4') is 0:
-        pass
-    elif os.system('pip install beautifulsoup4') is 0:
-        pass
-    else:
-        raise OSError
-    from bs4 import BeautifulSoup
-
-try:
-    from js2py import translate_file as trans
+    from js2py import translate_js
 except:
     print('Installing Js2Py...')
     if os.system('pip install js2py') is 0:
         pass
     else:
         raise OSError
-    from js2py import translate_file as trans
+    from js2py import translate_js
 
 print('Setting up...')
 for path in sys.path:
-    if path[-13:] == 'site-packages':
-        easy_bnu_connector_path = path+'\\easy_bnu_connector'
-        break
+    if path != '':
+        if re.match('.+\\\\(.+)', path).group(1) == 'site-packages':
+            easy_bnu_connector_path = path+'\\easy_bnu_connector'
+            break
 
-with open('..\\Easy-BNU-Connector.bat', 'w') as f:
-    f.write('start /min '+easy_bnu_connector_path+'\\Easy-BNU-Connector.bat')
+def get_windows_version():
+    with os.popen('ver') as p:
+        ver = p.read()
+    if ver.find('版本 10.0') >= 0 or ver.find('Version 10.0') >= 0:
+        return "'Windows 10'"
+    elif ver.find('版本 6.3') >= 0 or ver.find('Version 6.3') >= 0:
+        return "'Windows 8'"
+    elif ver.find('版本 6.2') >= 0 or ver.find('Version 6.2') >= 0:
+        return "'Windows 8'"
+    elif ver.find('版本 6.1') >= 0 or ver.find('Version 6.1') >= 0:
+        return "'Windows 7'"
+    elif ver.find('版本 6.0') >= 0 or ver.find('Version 6.0') >= 0:
+        return "'Windows Vista'"
+    elif ver.find('版本 5.1') >= 0 or ver.find('Version 5.1') >= 0:
+        return "'Windows XP'"
+    elif ver.find('版本 5.0') >= 0 or ver.find('Version 5.0') >= 0:
+        return "'Windows 2000'"
+    else:
+        return "'Windows NT'"
 
-trans('easy_bnu_connector\\methods.js', 'easy_bnu_connector\\methods.py')
-with open('easy_bnu_connector\\Easy-BNU-Connector.bat', 'w') as f:
-    try:
-        f.write('python '+easy_bnu_connector_path+'\\login.py\t\nexit')
-    except:
-        easy_bnu_connector_path = sys.path[0]+'\\easy_bnu_connector'
-        f.write('python '+easy_bnu_connector_path+'\\login.py\t\nexit')
+with open('easy_bnu_connector\\methods.js', 'rb') as f:
+    js = f.read().decode('utf-8')
+py_code = "__all__ = ['methods']\n\n"
+py_code += translate_js(js)
+py_code += "\n\nmethods = var.to_python()"
+py_code += "\n\nmethods.device = "+get_windows_version()
+
+with open('easy_bnu_connector\\methods.py', 'wb') as f:
+    f.write((py_code).encode('utf-8'))
 with open('easy_bnu_connector\\warmup.py', 'w') as f:
     f.write('from methods import methods')
 
@@ -77,7 +86,7 @@ def add_profile(netname, ssid, xml):
     os.system('netsh wlan add profile filename="WLAN-'+netname+'.xml"')
 
 with open('setup.xml') as f:
-    xml = f.read().replace('\n', '\t\n')
+    xml = f.read()
 add_profile('BNU-Student', '424E552D53747564656E74', xml)
 add_profile('BNU', '424E55', xml)
 
@@ -87,6 +96,10 @@ def change_regedit(header, reg):
     os.system('regedit /s '+sys.path[0]+'\\'+header.replace(' ', '-')+'.reg')
 
 with open('setup.reg') as f:
-    reg = f.read().replace('\n', '\t\n')
-change_regedit('REGEDIT4', reg)   
+    reg = f.read()
 change_regedit('Windows Registry Editor Version 5.00', reg)
+change_regedit('REGEDIT4', reg)
+
+with open('Easy-BNU-Connector-0.2.2.vbs', 'w') as f:
+    f.write('set ws = createobject("wscript.shell")\n')
+    f.write('ws.run "python '+easy_bnu_connector_path+'\\login.py", vbhide')
