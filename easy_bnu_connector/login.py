@@ -1,11 +1,10 @@
 ﻿# -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.2
+# Easy-BNU-Connector v0.2.1
 # Author: GasinAn
 # License: GNU General Public License v3.0
 
 
 import os
-import re
 import time
 try:
     import _thread
@@ -17,41 +16,64 @@ except:
     import Tkinter as tkinter
 
 from requests import request
+from bs4 import BeautifulSoup
 
 from methods import methods
 
 
+def device():
+    # Get the version of Windows.
+    with os.popen('ver') as p:
+        ver = p.read()
+    if ver.find('版本 10.0') >= 0 or ver.find('Version 10.0') >= 0:
+        return 'Windows 10'
+    elif ver.find('版本 6.3') >= 0 or ver.find('Version 6.3') >= 0:
+        return 'Windows 8'
+    elif ver.find('版本 6.2') >= 0 or ver.find('Version 6.2') >= 0:
+        return 'Windows 8'
+    elif ver.find('版本 6.1') >= 0 or ver.find('Version 6.1') >= 0:
+        return 'Windows 7'
+    elif ver.find('版本 6.0') >= 0 or ver.find('Version 6.0') >= 0:
+        return 'Windows Vista'
+    elif ver.find('版本 5.1') >= 0 or ver.find('Version 5.1') >= 0:
+        return 'Windows XP'
+    elif ver.find('版本 5.0') >= 0 or ver.find('Version 5.0') >= 0:
+        return 'Windows 2000'
+    elif ver.find('版本 4.9') >= 0 or ver.find('Version 4.9') >= 0:
+        return 'Windows ME'
+    elif ver.find('版本 4.1') >= 0 or ver.find('Version 4.1') >= 0:
+        return 'Windows 98'
+    elif ver.find('版本 4.0') >= 0 or ver.find('Version 4.0') >= 0:
+        return 'Windows 95'
+    else:
+        return 'Windows NT' 
+
 def keep_connection():
     # Try to keep connection.
-    test_url = 'http://www.4399.com/robots.txt'
-    status = 'no_connection'
-    other_situations_interface_set()
     while True:
-        if status == 'no_connection':
-            status = check_possibility_of_connection()
+        if parameters[0] == 'OK':
+            try:
+                r = request('GET', 'http://www.4399.com/robots.txt')
+                if r.text[:10] != 'User-agent':
+                    parameters[0] = ''
+            except:
+                parameters[0] = ''
 
         # Preparing to login.
-        elif status == 'preparing':
+        elif parameters[0] == 'Preparing':
             try:
-                r = request('GET', test_url, timeout=5)
+                r = request('GET', 'http://www.4399.com/robots.txt')
+                time.sleep(1)
                 if r.text[:10] == 'User-agent':
+                    parameters[0] = 'OK'
                     text_message.set('用户已在线')
-                    login_interface_forget()
                     other_situations_interface_set()
-                    status = 'online'
             except:
-                login_interface_forget()
-                other_situations_interface_set()
-                status = 'no_connection'
+                parameters[0] = ''
 
-        # Already Online.
+        # No connection now.
         else:
-            try:
-                r = request('GET', test_url, timeout=5)
-                if r.text[:10] != 'User-agent':
-                    status = 'no_connection'
-            except:
-                status = 'no_connection'
+            check_possibility_of_connection()
 
 def check_possibility_of_connection():
     # Check whether it is possible to make connection.
@@ -60,58 +82,56 @@ def check_possibility_of_connection():
             networks = p.read()
         status_bnu_student = networks.find('BNU-Student\n')
         status_bnu = networks.find('BNU\n')
-
-        # Try to search networks and make connection.
+        
+        # Try to find a network and make connection
         if status_bnu_student >= 0:
             if status_bnu >= status_bnu_student or status_bnu < 0:
-                return try_to_make_connection('BNU-Student')
+                try_to_make_connection('BNU-Student')
             else:
-                return try_to_make_connection('BNU')
+                try_to_make_connection('BNU')
         else:
             if status_bnu >= 0:
-                return try_to_make_connection('BNU')
+                try_to_make_connection('BNU')
             else:
                 text_message.set('没有校园网信号')
-                return 'no_connection'
+                other_situations_interface_set()
 
     # WLAN switch haven't been turned on. 
     except:      
         text_message.set('WLAN开关未打开')
-        return 'no_connection'
+        other_situations_interface_set()
 
 def try_to_make_connection(network):
     # Try to make connection.
     try:
         os.system('netsh wlan connect '+network)
-        for _ in range(30):
-            if os.system('ping -n 1 -w 5 www.4399.com') is 0:
-                r = request('GET', 'https://www.bnu.edu.cn/', timeout=5)
-                break
-        goto_url = re.search('<a.+?href="(.+?)".*?>', r.text).group(1)
-        r = request('GET', goto_url, timeout=5)
-
-        # Try to get useful parameters.
-        global srun_portal_pc_url, ip, ac_id
-        srun_portal_pc_url = re.match('https?://.+?/', r.url).group()
-        tag_user_ip = re.search('<.+?id="user_ip".*?>', r.text).group()
-        ip = re.search('.+?value="(.*?)".*?', tag_user_ip).group(1)
-        tag_ac_id = re.search('<.+?id="ac_id".*?>', r.text).group()
-        ac_id = re.search('.+?value="(.*?)".*?', tag_ac_id).group(1)
+        time.sleep(1.8)
+        r = request('GET', 'http://www.bnu.edu.cn')
+        soup = BeautifulSoup(r.text, 'html.parser')
+        r = request('GET', soup.a['href'])
+        srun_portal_pc_url = r.url[:21]
+        soup = BeautifulSoup(r.text, 'html.parser')
+        ip = soup.find(id='user_ip')['value']
+        ac_id = soup.find(id='ac_id')['value']
 
         # Succeeded.
+        parameters[0] = 'Preparing'
+        parameters[1] = srun_portal_pc_url
+        parameters[2] = ip
+        parameters[3] = ac_id
         text_message.set('')
         login_interface_set()
-        return 'preparing'
 
     # Already online. 
-    except AttributeError:
+    except TypeError:
+        parameters[0] = 'OK'
         text_message.set('用户已在线')
-        return 'ok'
+        other_situations_interface_set()
     
     # Failed
     except:
         text_message.set('校园网信号差')
-        return 'no connection'
+        other_situations_interface_set()
 
 def initialize():
     # Initialize the GUI.
@@ -138,34 +158,42 @@ def login_interface_set():
     b_setting.place(relx=0.105, rely=0.8, relwidth=0.375, relheight=0.125)
     b_login.place(relx=0.525, rely=0.8, relwidth=0.375, relheight=0.125)
 
-def login_interface_forget():
-    # Remove the "Login" interface.
-    for widget in (b_login, e_password, l_password, e_username, l_username):
-        widget.place_forget()
-
 def other_situations_interface_set():
     # Show the "Other Situations" interface.
+    try:
+        b_login.place_forget()
+        e_password.place_forget()
+        l_password.place_forget()
+        e_username.place_forget()
+        l_username.place_forget()
+    except:
+        pass
     l_symbol.place(relx=0.3, rely=0.2, relwidth=0.4, relheight=0.1)
     l_title.place(relx=0.15, rely=0.35, relwidth=0.7, relheight=0.1)
     l_message.place(relx=0.3, rely=0.55, relwidth=0.4, relheight=0.1)
     b_setting.place(relx=0.2, rely=0.7, relwidth=0.6, relheight=0.125)
 
 def login():
-    # Try to send parameters to get token then login.
+    # Try to login.
     try:
+        srun_portal_pc_url = parameters[1]
+        ip = parameters[2]
+        ac_id = parameters[3]
+
+        # Send parameters to get token.
         username = e_username.get()
         password = e_password.get()
         params = {'callback': 'jQuery', 'username': username, 'ip': ip}
-        get_challenge_url = srun_portal_pc_url+'cgi-bin/get_challenge'
-        r = request('GET', get_challenge_url, params=params, timeout=5)
+        get_challenge_url = srun_portal_pc_url+'/cgi-bin/get_challenge'
+        r = request('GET', get_challenge_url, params=params)
 
         # Receive token, and calculate parameters to send.
-        token = re.search('"challenge":"(.*?)"', r.text).group(1)
+        token = r.text[21:85]
         d = {'username': username,
-             'password': password,
-             'ip': ip,
-             'acid': ac_id,
-             'enc_ver': 'srun_bx1'}
+            'password': password,
+            'ip': ip,
+            'acid': ac_id,
+            'enc_ver': 'srun_bx1'}
         json_d = str(d).replace(chr(39), chr(34)).replace(' ', '')
         i = '{SRBX1}'+methods.base64_encode(methods.xEncode(json_d, token))
         hmd5 = methods.md5(password, token)
@@ -187,25 +215,31 @@ def login():
                   'info': i,
                   'n': '200',
                   'type': '1',
-                  'os': methods.device,
+                  'os': device(),
                   'name': 'Windows',
                   'double_stack': '0'}
 
         # Send parameters to login.
-        srun_portal_url = srun_portal_pc_url+'cgi-bin/srun_portal'
-        r = request('GET', srun_portal_url, params=params, timeout=5)
-        if re.search('"error":"(.*?)"', r.text) == 'ok':
-            text_message.set('登录成功')
+        srun_portal_url = srun_portal_pc_url+'/cgi-bin/srun_portal'
+        r = request('GET', srun_portal_url, params=params)
+        if r.text[61:72] == 'login_error':
+            if r.text[94] == 'P':
+                text_message.set('用户名或密码错误')
+            elif r.text[94] == 'U':
+                text_message.set('用户不存在')
+            else:
+                text_message.set('登录失败')
         else:
-            id_errmsg = re.search('"error_msg":"(.+?):.+?"', r.text).group(1)
-            text_message.set(methods.zh_CN[id_errmsg])
+            text_message.set('登录成功')
+            other_situations_interface_set()
 
     # Error occurred.
     except:
-        text_message.set('')
-        login_interface_forget()
-        other_situations_interface_set()
+        parameters[0] = ''
 
+
+# Initialize some useful parameters.
+parameters = ['', '', '', '']
 
 # Try to keep connection.
 _thread.start_new_thread(keep_connection, ())
@@ -214,9 +248,9 @@ _thread.start_new_thread(keep_connection, ())
 gui = tkinter.Tk()
 
 # Widgets which appear in both of two interfaces.
-text_message = tkinter.StringVar()
 l_symbol = tkinter.Label(gui, text='ต⦕⦁.⦁⦖ต', font=('Times New Roman', 20))
-l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.2')
+l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.1')
+text_message = tkinter.StringVar()
 l_message = tkinter.Label(gui, textvariable=text_message)
 b_setting = tkinter.Button(gui, text='设置', relief='groove')
 
