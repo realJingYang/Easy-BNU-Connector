@@ -1,7 +1,7 @@
 # Author: GasinAn
 
 import sys
-assert sys.getwindowsversion().major >= 5
+assert (sys.getwindowsversion().major >= 5)
 
 import os
 import re
