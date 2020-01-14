@@ -206,9 +206,6 @@ def login():
         other_situations_interface_set()
 
 
-# Try to keep connection.
-_thread.start_new_thread(keep_connection, ())
-
 # Create the GUI.
 gui = tkinter.Tk()
 
@@ -225,6 +222,9 @@ e_username = tkinter.Entry(gui)
 l_password = tkinter.Label(gui, text='密码')
 e_password = tkinter.Entry(gui, show='A')
 b_login = tkinter.Button(gui, text='登录', relief='groove', command=login)
+
+# Try to keep connection.
+_thread.start_new_thread(keep_connection, ())
 
 # Initialize the GUI.
 initialize()
