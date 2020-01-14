@@ -6,7 +6,6 @@
 
 import os
 import re
-import time
 try:
     import _thread
 except:
