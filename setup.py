@@ -5,7 +5,6 @@ assert (sys.getwindowsversion().major >= 5)
 
 import os
 import re
-import time
 try:
     import _thread
 except:
