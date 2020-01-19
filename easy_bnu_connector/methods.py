@@ -11,7 +11,7 @@ import hmac
 __all__ = ['ZH_CN', 'md5', 'sha1', 'base64_encode', 'x_encode', 'DEVICE']
 
 _ALPHA = 'LVoJPiCN2R8G90yg+hmFHuacZ1OWMnrsSTXkYpUq/3dlbfKwv6xztjI7DeBE45QA'
-ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+ALPHA = r'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 ZH_CN = {'ACIDIsEmpty': '缺少ACID',
          'ACIDIsRequired': '缺少ACID',
          'AuthInfoError': '刷新页面后再次登录',
@@ -146,16 +146,6 @@ ZH_CN = {'ACIDIsEmpty': '缺少ACID',
          'ZkNetworkError': '科技云服务异常',
          'ZkUserError': '登录中国科技云通行证的账号无效，请检查账号是否正确'}
 
-def md5(n, t):
-    return hmac.new(t.encode(), n.encode(), hashlib.md5).hexdigest()
-
-def sha1(s):
-    return hashlib.sha1(s.encode()).hexdigest()
-
-def base64_encode(s):
-    _base64_encode = binascii.b2a_base64(s.encode(), newline=False).decode()
-    return _base64_encode.replace(ALPHA, _ALPHA)
-
 try:
     int_ = long
 except:
@@ -165,6 +155,20 @@ try:
     chr_ = unichr
 except:
     chr_ = chr
+
+def md5(n, t):
+    return hmac.new(t.encode(), n.encode(), hashlib.md5).hexdigest()
+
+def sha1(s):
+    return hashlib.sha1(s.encode()).hexdigest()
+
+def base64_encode(s):
+    _base64_encode = binascii.b2a_base64(s.encode(), newline=False).decode()
+    for k in range(64):
+        _base64_encode = _base64_encode.replace(ALPHA[k], chr_(k+256))
+    for k in range(64):
+        _base64_encode = _base64_encode.replace(chr_(k+256), _ALPHA[k])
+    return _base64_encode
 
 def char_code_at(a, i):
     try:
