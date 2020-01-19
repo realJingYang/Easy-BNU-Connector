@@ -62,7 +62,7 @@ def check_possibility_of_connection():
             with os.popen('netsh wlan show networks') as p:
                 networks = p.read()
         except:
-                os.system('chcp 850')
+            os.system('chcp 850')
             with os.popen('netsh wlan show networks') as p:
                 networks = p.read()
         status_bnu_student = networks.find('BNU-Student\n')
