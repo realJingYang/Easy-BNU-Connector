@@ -1,4 +1,8 @@
+# -*- coding: UTF-8 -*-
+# Easy-BNU-Connector v0.2.3
+# File: setup.py
 # Author: GasinAn
+# License: GNU General Public License v3.0
 
 import sys
 assert (sys.getwindowsversion().major >= 5)
@@ -18,23 +22,10 @@ try:
     from requests import request
 except:
     print('Installing Requests...')
-    if os.system('conda install requests') is 0:
-        pass
-    elif os.system('pip install requests') is 0:
-        pass
-    else:
-        raise OSError
+    if os.system('conda install requests') != 0:
+        if os.system('pip install requests') != 0:
+            raise OSError
     from requests import request
-
-try:
-    from js2py import translate_js
-except:
-    print('Installing Js2Py...')
-    if os.system('pip install js2py') is 0:
-        pass
-    else:
-        raise OSError
-    from js2py import translate_js
 
 print('Setting up...')
 for path in sys.path:
@@ -63,17 +54,10 @@ def get_windows_version():
     else:
         return "'Windows NT'"
 
-with open('easy_bnu_connector\\methods.js', 'rb') as f:
-    js = f.read().decode('utf-8')
-py_code = "__all__ = ['methods']\n\n"
-py_code += translate_js(js)
-py_code += "\n\nmethods = var.to_python()"
-py_code += "\n\nmethods.device = "+get_windows_version()
-
-with open('easy_bnu_connector\\methods.py', 'wb') as f:
-    f.write((py_code).encode('utf-8'))
+with open('easy_bnu_connector\\methods.py', 'ab') as f:
+    f.write(('\nDEVICE = '+get_windows_version()).encode('utf-8'))
 with open('easy_bnu_connector\\warmup.py', 'w') as f:
-    f.write('from methods import methods')
+    f.write('from methods import *')
 
 os.system('mkdir '+easy_bnu_connector_path)
 os.system('move /y easy_bnu_connector\\* '+easy_bnu_connector_path)
@@ -99,6 +83,6 @@ with open('setup.reg') as f:
 change_regedit('Windows Registry Editor Version 5.00', reg)
 change_regedit('REGEDIT4', reg)
 
-with open('Easy-BNU-Connector-0.2.2.vbs', 'w') as f:
+with open('Easy-BNU-Connector-0.2.3.vbs', 'w') as f:
     f.write('set ws = createobject("wscript.shell")\n')
     f.write('ws.run "python '+easy_bnu_connector_path+'\\login.py", vbhide')

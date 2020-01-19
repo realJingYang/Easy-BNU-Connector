@@ -1,4 +1,4 @@
-# ต⦕⦁.⦁⦖ต Easy-BNU-Connector 0.2.2
+# ต⦕⦁.⦁⦖ต Easy-BNU-Connector 0.2.3
 
 连接北京师范大学校园网的 Python 程序
 
@@ -8,15 +8,15 @@
 
 1. 点击 “Clone or download” 后点击 “Download ZIP” 下载，
 
-2. 解压 Easy-BNU-Connector-0.2.2.zip，
+2. 解压 Easy-BNU-Connector-0.2.3.zip，
 
-3. 双击 Easy-BNU-Connector-0.2.2 文件夹内的 setup.bat，
+3. 双击 Easy-BNU-Connector-0.2.3 文件夹内的 setup.bat，
 
 此后会开始安装并出现窗口。安装过程中，若窗口中出现 “Proceed (\[y]/n)?” 字样，需要按回车键以确认安装。
 
-无论是否安装成功，窗口最终都会自动关闭。若窗口关闭后，Easy-BNU-Connector-0.2.2.zip 和 Easy-BNU-Connector-0.2.2 文件夹消失，并出现 Easy-BNU-Connector-0.2.2.vbs，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
+无论是否安装成功，窗口最终都会自动关闭。若窗口关闭后，Easy-BNU-Connector-0.2.3.zip 和 Easy-BNU-Connector-0.2.3 文件夹消失，并出现 Easy-BNU-Connector-0.2.3.vbs，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
 
-以后双击 Easy-BNU-Connector-0.2.2.vbs 即可使用。
+以后双击 Easy-BNU-Connector-0.2.3.vbs 即可使用。
 
 ## 警告
 
@@ -36,17 +36,9 @@
 
 ## 更新
 
-1. 完善安装机制，增加安装时检测操作系统及其版本的机制；
+1. 弃用 Js2Py 模块；
 
-2. 弃用批处理文件，改用 VBScript 脚本文件启动程序，彻底使 CMD 窗口在程序运行时不出现；
-
-3. 弃用 BeautifulSoup4 模块，使用正则表达式模块代替，缩短程序运行时间；
-
-4. 不再于程序运行时获取操作系统版本，改在安装时获取，保存后于程序运行时读出，缩短程序运行时间；
-
-5. 完善持续检查网络状况的机制；
-
-6. 丰富提示信息。
+2. 解决因可见 WLAN 名称中含有非 GBK 字符，导致错误提示“WLAN开关未打开”的问题。
 
 ## 特别说明
 
@@ -67,9 +59,3 @@
 跨平台；
 
 ……
-
-## 不予考虑的事
-
-采用严重不符合规范的代码；
-
-不使用认证网关内的 JavaScript。
