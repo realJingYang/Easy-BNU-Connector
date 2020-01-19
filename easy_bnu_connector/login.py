@@ -1,5 +1,6 @@
 ﻿# -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.2
+# Easy-BNU-Connector v0.2.3
+# File: easy_bnu_connector\login.py
 # Author: GasinAn
 # License: GNU General Public License v3.0
 
@@ -17,14 +18,16 @@ except:
 
 from requests import request
 
-from methods import methods
+from methods import *
 
 
 def keep_connection():
+    # Set the interface of the GUI.
+    other_situations_interface_set()
+
     # Try to keep connection.
     test_url = 'http://www.4399.com/robots.txt'
-    status = 'no_connection'
-    other_situations_interface_set()
+    status = 'no_connection'    
     while True:
         if status == 'no_connection':
             status = check_possibility_of_connection()
@@ -55,8 +58,13 @@ def keep_connection():
 def check_possibility_of_connection():
     # Check whether it is possible to make connection.
     try:
-        with os.popen('netsh wlan show networks') as p:
-            networks = p.read()
+        try:
+            with os.popen('netsh wlan show networks') as p:
+                networks = p.read()
+        except:
+                os.system('chcp 850')
+            with os.popen('netsh wlan show networks') as p:
+                networks = p.read()
         status_bnu_student = networks.find('BNU-Student\n')
         status_bnu = networks.find('BNU\n')
 
@@ -83,7 +91,7 @@ def try_to_make_connection(network):
     try:
         os.system('netsh wlan connect '+network)
         for _ in range(30):
-            if os.system('ping -n 1 -w 5 www.4399.com') is 0:
+            if os.system('ping -n 1 -w 5 www.4399.com') == 0:
                 r = request('GET', 'https://www.bnu.edu.cn/', timeout=5)
                 break
         goto_url = re.search('<a.+?href="(.+?)".*?>', r.text).group(1)
@@ -166,8 +174,8 @@ def login():
              'acid': ac_id,
              'enc_ver': 'srun_bx1'}
         json_d = str(d).replace(chr(39), chr(34)).replace(' ', '')
-        i = '{SRBX1}'+methods.base64_encode(methods.xEncode(json_d, token))
-        hmd5 = methods.md5(password, token)
+        i = '{SRBX1}'+base64_encode(x_encode(json_d, token))
+        hmd5 = md5(password, token)
         chkstr = token+username
         chkstr += token+hmd5
         chkstr += token+ac_id
@@ -182,11 +190,11 @@ def login():
                   'password': password,
                   'ac_id': ac_id,
                   'ip': ip,
-                  'chksum': methods.sha1(chkstr),
+                  'chksum': sha1(chkstr),
                   'info': i,
                   'n': '200',
                   'type': '1',
-                  'os': methods.device,
+                  'os': DEVICE,
                   'name': 'Windows',
                   'double_stack': '0'}
 
@@ -197,7 +205,7 @@ def login():
             text_message.set('登录成功')
         else:
             id_errmsg = re.search('"error_msg":"(.+?):.+?"', r.text).group(1)
-            text_message.set(methods.zh_CN[id_errmsg])
+            text_message.set(ZH_CN[id_errmsg])
 
     # Error occurred.
     except:
@@ -212,7 +220,7 @@ gui = tkinter.Tk()
 # Widgets which appear in both of two interfaces.
 text_message = tkinter.StringVar()
 l_symbol = tkinter.Label(gui, text='ต⦕⦁.⦁⦖ต', font=('Times New Roman', 20))
-l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.2')
+l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.3')
 l_message = tkinter.Label(gui, textvariable=text_message)
 b_setting = tkinter.Button(gui, text='设置', relief='groove')
 
