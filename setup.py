@@ -13,18 +13,17 @@ try:
     from requests import request
 except:
     try:
-        print('Installing Requests...')
+        eval('print("Installing Requests...")')
     except:
-        eval("print 'Installing Requests...'")
+        eval('print "Installing Requests..." ')
     if os.system('conda install requests') != 0:
         if os.system('pip install requests') != 0:
             raise OSError
-    from requests import request
 
 try:
-    print('Setting up...')
+    eval('print("Setting up...")')
 except:
-    eval("print 'Setting up...'")
+    eval('print "Setting up..." ')
 for path in sys.path:
     if path != '':
         if path[-13:] == 'site-packages':
