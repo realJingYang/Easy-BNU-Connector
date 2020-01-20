@@ -8,7 +8,6 @@ import sys
 assert (sys.getwindowsversion().major >= 5)
 
 import os
-import re
 
 try:
     from requests import request
@@ -28,7 +27,7 @@ except:
     eval("print 'Setting up...'")
 for path in sys.path:
     if path != '':
-        if re.match('.+\\\\(.+)', path).group(1) == 'site-packages':
+        if path[-13:] == 'site-packages':
             easy_bnu_connector_path = path+'\\easy_bnu_connector'
             break
 
