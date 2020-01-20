@@ -53,7 +53,7 @@ def get_windows_version():
         return "'Windows NT'"
 
 with open('easy_bnu_connector\\methods.py', 'ab') as f:
-    f.write(('\nDEVICE = '+get_windows_version()).encode('UTF-8'))
+    f.write(('\n\nDEVICE = '+get_windows_version()).encode('UTF-8'))
 with open('easy_bnu_connector\\warmup.py', 'w') as f:
     f.write('from methods import *')
 
