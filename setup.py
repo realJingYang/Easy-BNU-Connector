@@ -7,6 +7,9 @@
 import sys
 assert (sys.getwindowsversion().major >= 5)
 
+import os
+import re
+
 try:
     from requests import request
 except:
