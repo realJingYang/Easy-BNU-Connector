@@ -1,4 +1,4 @@
-# ต⦕⦁.⦁⦖ต Easy-BNU-Connector 0.2.3
+# ต⦕⦁.⦁⦖ต Easy-BNU-Connector 0.2.4
 
 连接北京师范大学校园网的 Python 程序
 
@@ -8,15 +8,15 @@
 
 1. 点击 “Clone or download” 后点击 “Download ZIP” 下载，
 
-2. 解压 Easy-BNU-Connector-0.2.3.zip，
+2. 解压 Easy-BNU-Connector-0.2.4.zip，
 
-3. 双击 Easy-BNU-Connector-0.2.3 文件夹内的 setup.bat，
+3. 双击 Easy-BNU-Connector-0.2.4 文件夹内的 setup.bat，
 
 此后会开始安装并出现窗口。安装过程中，若窗口中出现 “Proceed (\[y]/n)?” 字样，需要按回车键以确认安装。
 
-无论是否安装成功，窗口最终都会自动关闭。若窗口关闭后，Easy-BNU-Connector-0.2.3.zip 和 Easy-BNU-Connector-0.2.3 文件夹消失，并出现 Easy-BNU-Connector-0.2.3.vbs，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
+无论是否安装成功，窗口最终都会自动关闭。若窗口关闭后，Easy-BNU-Connector-0.2.4.zip 和 Easy-BNU-Connector-0.2.4 文件夹消失，并出现 Easy-BNU-Connector-0.2.4.vbs，说明安装成功，否则安装失败。若安装失败，请确认网络连接状况良好后重新安装。
 
-以后双击 Easy-BNU-Connector-0.2.3.vbs 即可使用。
+以后双击 Easy-BNU-Connector-0.2.4.vbs 即可使用。
 
 ## 警告
 
@@ -36,9 +36,7 @@
 
 ## 更新
 
-1. 弃用 Js2Py 模块；
-
-2. 解决因可见 WLAN 名称中含有非 GBK 字符，导致错误提示“WLAN开关未打开”的问题。
+优化代码，完善对 Python2 的支持。
 
 ## 特别说明
 

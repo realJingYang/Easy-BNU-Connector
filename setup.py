@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.3
+# Easy-BNU-Connector v0.2.4
 # File: setup.py
 # Author: GasinAn
 # License: GNU General Public License v3.0
@@ -7,27 +7,22 @@
 import sys
 assert (sys.getwindowsversion().major >= 5)
 
-import os
-import re
-try:
-    import _thread
-except:
-    import thread as _thread
-try:
-    import tkinter
-except:
-    import Tkinter as tkinter
-
 try:
     from requests import request
 except:
-    print('Installing Requests...')
+    try:
+        print('Installing Requests...')
+    except:
+        print 'Installing Requests...'
     if os.system('conda install requests') != 0:
         if os.system('pip install requests') != 0:
             raise OSError
     from requests import request
 
-print('Setting up...')
+try:
+    print('Setting up...')
+except:
+    print 'Setting up...'
 for path in sys.path:
     if path != '':
         if re.match('.+\\\\(.+)', path).group(1) == 'site-packages':
@@ -83,6 +78,6 @@ with open('setup.reg') as f:
 change_regedit('Windows Registry Editor Version 5.00', reg)
 change_regedit('REGEDIT4', reg)
 
-with open('Easy-BNU-Connector-0.2.3.vbs', 'w') as f:
+with open('Easy-BNU-Connector-0.2.4.vbs', 'w') as f:
     f.write('set ws = createobject("wscript.shell")\n')
     f.write('ws.run "python '+easy_bnu_connector_path+'\\login.py", vbhide')
