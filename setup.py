@@ -30,6 +30,8 @@ for path in sys.path:
         if path[-13:] == 'site-packages':
             easy_bnu_connector_path = path+'\\easy_bnu_connector'
             break
+if 'easy_bnu_connector_path' not in globals():
+    easy_bnu_connector_path = sys.path[1]
 
 def get_windows_version():
     with os.popen('ver') as p:
@@ -52,7 +54,7 @@ def get_windows_version():
         return "'Windows NT'"
 
 with open('easy_bnu_connector\\methods.py', 'ab') as f:
-    f.write(('\nDEVICE = '+get_windows_version()).encode('utf-8'))
+    f.write(('\nDEVICE = '+get_windows_version()).encode('UTF-8'))
 with open('easy_bnu_connector\\warmup.py', 'w') as f:
     f.write('from methods import *')
 
