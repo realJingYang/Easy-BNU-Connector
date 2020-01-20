@@ -1,14 +1,28 @@
 # -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.3
+# Easy-BNU-Connector v0.2.4
 # File: easy_bnu_connector\methods.py
 # Author: GasinAn
 # License: GNU General Public License v3.0
+
+import os
+import re
+try:
+    import _thread
+except:
+    import thread as _thread
+try:
+    import tkinter
+except:
+    import Tkinter as tkinter
+
+from requests import request
 
 import binascii
 import hashlib
 import hmac
 
-__all__ = ['ZH_CN', 'md5', 'sha1', 'base64_encode', 'x_encode', 'DEVICE']
+__all__ = ('os', 're', '_thread', 'tkinter', 'request',
+           'ZH_CN', 'md5', 'sha1', 'base64_encode', 'x_encode', 'DEVICE')
 
 _ALPHA = 'LVoJPiCN2R8G90yg+hmFHuacZ1OWMnrsSTXkYpUq/3dlbfKwv6xztjI7DeBE45QA'
 ALPHA = r'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
@@ -163,7 +177,7 @@ def sha1(s):
     return hashlib.sha1(s.encode()).hexdigest()
 
 def base64_encode(s):
-    _base64_encode = binascii.b2a_base64(s.encode(), newline=False).decode()
+    _base64_encode = binascii.b2a_base64(s.encode('UTF-8'), newline=False).decode()
     for k in range(64):
         _base64_encode = _base64_encode.replace(ALPHA[k], chr_(k+256))
     for k in range(64):

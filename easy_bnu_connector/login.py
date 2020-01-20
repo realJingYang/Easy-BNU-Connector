@@ -1,36 +1,22 @@
 ﻿# -*- coding: UTF-8 -*-
-# Easy-BNU-Connector v0.2.3
+# Easy-BNU-Connector v0.2.4
 # File: easy_bnu_connector\login.py
 # Author: GasinAn
 # License: GNU General Public License v3.0
 
-
-import os
-import re
-try:
-    import _thread
-except:
-    import thread as _thread
-try:
-    import tkinter
-except:
-    import Tkinter as tkinter
-
-from requests import request
-
 from methods import *
 
-
 def keep_connection():
-    # Set the interface of the GUI.
+    # Initialize.
+    global status
+    status = 'no_connection'
     other_situations_interface_set()
 
-    # Try to keep connection.
-    test_url = 'http://www.4399.com/robots.txt'
-    status = 'no_connection'    
+    # Try to keep connection.    
+    test_url = 'http://www.4399.com/robots.txt'        
     while True:
         if status == 'no_connection':
-            status = check_possibility_of_connection()
+            check_possibility_of_connection()
 
         # Preparing to login.
         elif status == 'preparing':
@@ -71,20 +57,18 @@ def check_possibility_of_connection():
         # Try to search networks and make connection.
         if status_bnu_student >= 0:
             if status_bnu >= status_bnu_student or status_bnu < 0:
-                return try_to_make_connection('BNU-Student')
+                try_to_make_connection('BNU-Student')
             else:
-                return try_to_make_connection('BNU')
+                try_to_make_connection('BNU')
         else:
             if status_bnu >= 0:
-                return try_to_make_connection('BNU')
+                try_to_make_connection('BNU')
             else:
                 text_message.set('没有校园网信号')
-                return 'no_connection'
 
     # WLAN switch haven't been turned on. 
     except:      
         text_message.set('WLAN开关未打开')
-        return 'no_connection'
 
 def try_to_make_connection(network):
     # Try to make connection.
@@ -108,17 +92,16 @@ def try_to_make_connection(network):
         # Succeeded.
         text_message.set('')
         login_interface_set()
-        return 'preparing'
+        status = 'preparing'
 
     # Already online. 
     except AttributeError:
         text_message.set('用户已在线')
-        return 'ok'
+        status = 'ok'
     
     # Failed
     except:
         text_message.set('校园网信号差')
-        return 'no connection'
 
 def initialize():
     # Initialize the GUI.
@@ -203,6 +186,9 @@ def login():
         r = request('GET', srun_portal_url, params=params, timeout=5)
         if re.search('"error":"(.*?)"', r.text) == 'ok':
             text_message.set('登录成功')
+            login_interface_forget()
+            other_situations_interface_set()
+            status = 'ok'
         else:
             id_errmsg = re.search('"error_msg":"(.+?):.+?"', r.text).group(1)
             text_message.set(ZH_CN[id_errmsg])
@@ -212,7 +198,7 @@ def login():
         text_message.set('')
         login_interface_forget()
         other_situations_interface_set()
-
+        status = 'no_connection'
 
 # Create the GUI.
 gui = tkinter.Tk()
@@ -220,7 +206,7 @@ gui = tkinter.Tk()
 # Widgets which appear in both of two interfaces.
 text_message = tkinter.StringVar()
 l_symbol = tkinter.Label(gui, text='ต⦕⦁.⦁⦖ต', font=('Times New Roman', 20))
-l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.3')
+l_title = tkinter.Label(gui, text='Easy-BNU-Connector v0.2.4')
 l_message = tkinter.Label(gui, textvariable=text_message)
 b_setting = tkinter.Button(gui, text='设置', relief='groove')
 
