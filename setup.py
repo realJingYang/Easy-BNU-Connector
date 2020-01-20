@@ -13,7 +13,7 @@ except:
     try:
         print('Installing Requests...')
     except:
-        print 'Installing Requests...'
+        eval("print 'Installing Requests...'")
     if os.system('conda install requests') != 0:
         if os.system('pip install requests') != 0:
             raise OSError
@@ -22,7 +22,7 @@ except:
 try:
     print('Setting up...')
 except:
-    print 'Setting up...'
+    eval("print 'Setting up...'")
 for path in sys.path:
     if path != '':
         if re.match('.+\\\\(.+)', path).group(1) == 'site-packages':
